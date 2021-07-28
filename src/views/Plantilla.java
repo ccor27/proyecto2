@@ -10,11 +10,16 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class Plantilla extends Composite {
-	private Table table;
-	private Text text;
-	private Table table_1;
+	private Table tblProductos;
+	private Text txtNombreVendedor;
+	private Table tblContactos;
+	private Text txtAreaComentMeg;
+	private Text txtComentario;
 
 	/**
 	 * Create the composite.
@@ -26,13 +31,13 @@ public class Plantilla extends Composite {
 		
 		Group grpMuro = new Group(this, SWT.NONE);
 		grpMuro.setText("Muro");
-		grpMuro.setBounds(10, 195, 382, 329);
+		grpMuro.setBounds(10, 195, 382, 265);
 		
 		TableViewer tableViewer = new TableViewer(grpMuro, SWT.BORDER | SWT.FULL_SELECTION);
-		table = tableViewer.getTable();
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		table.setBounds(10, 22, 362, 297);
+		tblProductos = tableViewer.getTable();
+		tblProductos.setLinesVisible(true);
+		tblProductos.setHeaderVisible(true);
+		tblProductos.setBounds(10, 22, 362, 229);
 		
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnNombre = tableViewerColumn.getColumn();
@@ -51,17 +56,36 @@ public class Plantilla extends Composite {
 		
 		Group grpComentariosYMe = new Group(this, SWT.NONE);
 		grpComentariosYMe.setText("Comentarios y me gusta");
-		grpComentariosYMe.setBounds(398, 195, 302, 329);
+		grpComentariosYMe.setBounds(398, 195, 302, 265);
+		
+		txtAreaComentMeg = new Text(grpComentariosYMe, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
+		txtAreaComentMeg.setBounds(10, 32, 282, 157);
+		
+		txtComentario = new Text(grpComentariosYMe, SWT.BORDER);
+		txtComentario.setBounds(10, 213, 101, 21);
+		
+		Button btnComentar = new Button(grpComentariosYMe, SWT.NONE);
+		btnComentar.setBounds(129, 211, 75, 25);
+		btnComentar.setText("Comentar");
+		
+		Button btnMeGusta = new Button(grpComentariosYMe, SWT.NONE);
+		btnMeGusta.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		btnMeGusta.setBounds(217, 212, 75, 23);
+		btnMeGusta.setText("Me gusta");
 		
 		Group grpContactos = new Group(this, SWT.NONE);
 		grpContactos.setText("Contactos");
 		grpContactos.setBounds(398, 10, 302, 179);
 		
 		TableViewer tableViewer_1 = new TableViewer(grpContactos, SWT.BORDER | SWT.FULL_SELECTION);
-		table_1 = tableViewer_1.getTable();
-		table_1.setLinesVisible(true);
-		table_1.setHeaderVisible(true);
-		table_1.setBounds(10, 25, 282, 144);
+		tblContactos = tableViewer_1.getTable();
+		tblContactos.setLinesVisible(true);
+		tblContactos.setHeaderVisible(true);
+		tblContactos.setBounds(10, 25, 282, 144);
 		
 		TableViewerColumn tableViewerColumn_3 = new TableViewerColumn(tableViewer_1, SWT.NONE);
 		TableColumn tblclmnNombreDelContacto = tableViewerColumn_3.getColumn();
@@ -76,8 +100,8 @@ public class Plantilla extends Composite {
 		lblNombreDelVendedor.setBounds(10, 49, 47, 15);
 		lblNombreDelVendedor.setText("Nombre ");
 		
-		text = new Text(grpVendedor, SWT.BORDER);
-		text.setBounds(10, 70, 88, 21);
+		txtNombreVendedor = new Text(grpVendedor, SWT.BORDER);
+		txtNombreVendedor.setBounds(10, 70, 88, 21);
 		
 		Label lbl_IconoUsiario = new Label(grpVendedor, SWT.NONE);
 		lbl_IconoUsiario.setImage(SWTResourceManager.getImage("C:\\estructuraDatos\\proyecto2\\resources\\iconoUsuario2.png"));

@@ -8,24 +8,24 @@ import java.util.ArrayList;
 
 public class NodoGrafo {
 
-	private String nombre; 
+	private Vendedor vendedor; 
 	private String dato;
 	private ArrayList<Enlace> listaEnlaces;
 	
 	public NodoGrafo() {
 	
 	}
-	public NodoGrafo(String nombre, String data){
+	public NodoGrafo(Vendedor vendedor, String data){
 		this.listaEnlaces = new ArrayList<>();
 		listaEnlaces.add(null);
 		this.dato=data;
-		this.nombre =nombre;
+		this.vendedor =vendedor;
 	}
-	public String getNombre() {
-		return nombre;
+	public Vendedor getNombre() {
+		return vendedor;
 	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setVendedor(Vendedor vendedor) {
+		this.vendedor = vendedor;
 	}
 	public String getData() {
 		return dato;
@@ -39,6 +39,11 @@ public class NodoGrafo {
 	public void setListaEnlaces(ArrayList<Enlace> listaEnlaces) {
 		this.listaEnlaces = listaEnlaces;
 	}
+	
+	public Vendedor getVendedor(){
+		return this.vendedor;
+	}
+	
 	
 	public int buscarIndiceLibre() {
 		int indiceDisponible = -1;
@@ -61,7 +66,7 @@ public class NodoGrafo {
 	 * @param peso
 	 */
 	public void conectarNodoPesado(NodoGrafo nodo, int indice, double peso) {
-		if (buscarNodoPorNombre(nodo.getNombre()) == null && nodo != null) {
+		if (buscarNodoPorNombre(nodo.getVendedor().getNombre()) == null && nodo != null) {
 			if (indice < listaEnlaces.size()) {
 				listaEnlaces.set(indice, new Enlace(nodo, peso));
 			} else {
@@ -77,7 +82,7 @@ public class NodoGrafo {
 	public NodoGrafo buscarNodoPorNombre(String nombre) {
 		for (int i = 0; i < listaEnlaces.size(); i++) {
 			if (listaEnlaces.get(i) != null) {
-				if (listaEnlaces.get(i).getNodo().getNombre().equalsIgnoreCase(nombre)) {
+				if (listaEnlaces.get(i).getNodo().getVendedor().getNombre().equalsIgnoreCase(nombre)) {
 					return listaEnlaces.get(i).getNodo();
 				}
 			}
@@ -100,7 +105,7 @@ public class NodoGrafo {
 	
 	
 	public String toString() {
-		String message = nombre + ": \n\t\t";
+		String message = vendedor.getNombre() + ": \n\t\t";
 		message += "{" + dato + "}\n\t\t";
 		message += "listaEnlaces: " + listaEnlaces.size() + "\n\t\t";
 		for (int i = 0; i < listaEnlaces.size(); i++) {
@@ -114,4 +119,5 @@ public class NodoGrafo {
 
 		return message;
 	}
+
 }

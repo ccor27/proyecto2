@@ -1,7 +1,7 @@
 package modelo;
 
 import java.util.HashMap;
-
+import java.util.Iterator;
 
 import exception.ErrorNodoNoExiste;
 import exception.ErrorNodoYaExiste;
@@ -16,9 +16,9 @@ public class GrafoNoDirigido {
 		this.listaVendedores = new HashMap<>();
 	}
 	/**
-	 * getGrafo
+	 * getListaGrafos
 	 */
-	public HashMap<String, NodoGrafo> getGrafo() {
+	public HashMap<String,NodoGrafo> getlistaVendedores() {
 		return listaVendedores;
 	}
 	
@@ -26,12 +26,12 @@ public class GrafoNoDirigido {
 	 * agregarNodo
 	 * 
 	 */
-	public void agregarNodo(String nombreNodo, String data) throws ErrorNodoYaExiste {
-		if (!listaVendedores.containsKey(nombreNodo)) {
-			NodoGrafo node = new NodoGrafo(nombreNodo, data);
-			listaVendedores.put(nombreNodo, node);
+	public void agregarNodo(Vendedor vendedor) throws ErrorNodoYaExiste {
+		if (!listaVendedores.containsKey(vendedor.getClave())) {
+			NodoGrafo node = new NodoGrafo(vendedor, vendedor.getClave());
+			listaVendedores.put(vendedor.getClave(),node);
 			tamanio = listaVendedores.size();
-			System.out.println("Nodo " + nombreNodo + " agregado exitosamente");
+			System.out.println("Nodo " + vendedor.getNombre() + " agregado exitosamente");
 		} else {
 			throw new ErrorNodoYaExiste("Error: el nodo ya existe en el grafo");
 		}
@@ -40,22 +40,64 @@ public class GrafoNoDirigido {
 	/**
 	 * conectarNodoNoPesado
 	 */
-	public void conectarNodoNoPesado(String nodoOrigen, String nodoDestino) throws ErrorNodoNoExiste {
+	public void conectarNodoNoPesado(Vendedor nodoOrigen, Vendedor nodoDestino) throws ErrorNodoNoExiste {
 		NodoGrafo auxiliarNodoOrigen;
 		NodoGrafo auxiliarNodoDestino;
-		if (listaVendedores.containsKey(nodoOrigen)) {
-			auxiliarNodoOrigen = listaVendedores.get(nodoOrigen);
-			if (listaVendedores.containsKey(nodoDestino)) {
-				auxiliarNodoDestino = listaVendedores.get(nodoDestino);
+		if (listaVendedores.containsKey(nodoOrigen.getClave())) {
+			auxiliarNodoOrigen = listaVendedores.get(nodoOrigen.getClave());
+			if (listaVendedores.containsKey(nodoDestino.getClave())) {
+				auxiliarNodoDestino = listaVendedores.get(nodoDestino.getClave());
 			} else {
 				throw new ErrorNodoNoExiste("El nodo destino no existe");
 			}
 			auxiliarNodoOrigen.conectarNodoNoPesado(auxiliarNodoDestino, auxiliarNodoOrigen.buscarIndiceLibre());
 			auxiliarNodoDestino.conectarNodoNoPesado(auxiliarNodoOrigen, auxiliarNodoDestino.buscarIndiceLibre());
-			;
+			System.out.println(listaVendedores.toString());
 		} else {
 			throw new ErrorNodoNoExiste("El nodo origen no existe");
 		}
+	}
+	
+	public boolean agregarProdVendedor(String nombreVendedor, Producto p){
+		
+		Vendedor vend = null;
+		boolean centinela = false;
+		// Definir Iterator para extraer o imprimir valores 
+		for( Iterator it = listaVendedores.keySet().iterator(); it.hasNext();) { 
+			
+			String s = (String)it.next();
+			String s1 = (String)listaVendedores.get(s).getVendedor().getNombre();
+			if(s1.equalsIgnoreCase(nombreVendedor)){
+				vend=listaVendedores.get(s).getVendedor();
+				break;
+			}
+			
+		}
+		
+		if(vend!=null){//verificamos que el vendedor exista
+			if(vend.agregarProducto(p)){
+				centinela = true;
+				vend.getListaProductos().inorden();
+			}
+					
+		}
+		return centinela;
+	}
+	
+	public Vendedor obtenerVendedor(String nombreVendedor){
+		
+		Vendedor vend = null;
+		for( Iterator it = listaVendedores.keySet().iterator(); it.hasNext();) { 
+			
+			String s = (String)it.next();
+			String s1 = (String)listaVendedores.get(s).getVendedor().getNombre();
+			if(s1.equalsIgnoreCase(nombreVendedor)){
+				vend=listaVendedores.get(s).getVendedor();
+				break;
+			}
+			
+		}
+		return vend;
 	}
 	
 }

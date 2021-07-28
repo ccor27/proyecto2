@@ -20,13 +20,37 @@ public class Arbol<T> {
 	 * @param elemento Nuevo dato
 	 * @return true si lo pudo guardar
 	 */
-	public void agregar(T elemento) {		
+	public boolean agregar(T elemento) {		
 		if(estaVacio()) {
 			raiz = new NodoArbol<>(elemento);
 			peso++;
-		}else if(raiz.agregar(elemento)){			
+			return true;
+		}else if(raiz.agregar(elemento)){	
 			peso++;
-		}		
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * Realiza el recorrido inorden en el árbol binario
+	 */
+	public void inorden() {
+		inorden(raiz);
+		System.out.println();
+	}
+	
+	/**
+	 * Realiza el recorrido inorden en el árbol binario
+	 * @param n Nodo raíz
+	 */
+	private void inorden(NodoArbol<T> n) {
+		if(n!=null) {
+			inorden(n.getIzquierdo());
+			System.out.print(n.getElemento()+"\t");
+			inorden(n.getDerecho());
+		}
 	}
 	/**
 	 * @return the raiz

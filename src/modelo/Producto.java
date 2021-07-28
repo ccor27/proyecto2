@@ -4,7 +4,11 @@ public class Producto {
 
 	private String nombre;
 	private String categoria;
-	private String valor;
+	
+	public Producto(String nombre, String categoria){
+		this.categoria = categoria;
+		this.nombre = nombre;
+	}
 	
 	public String getNombre() {
 		return nombre;
@@ -18,14 +22,11 @@ public class Producto {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
-	public String getValor() {
-		return valor;
+
+	@Override
+	public String toString() {
+		return "Producto [nombre=" + nombre + "]";
 	}
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
-	
-	
 	
 
 
