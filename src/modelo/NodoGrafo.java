@@ -17,7 +17,7 @@ public class NodoGrafo {
 	}
 	public NodoGrafo(Vendedor vendedor, String data){
 		this.listaEnlaces = new ArrayList<>();
-		listaEnlaces.add(null);
+		//listaEnlaces.add(null);
 		this.dato=data;
 		this.vendedor =vendedor;
 	}
@@ -95,10 +95,10 @@ public class NodoGrafo {
 
 			listaEnlaces.set(index, new Enlace(nombreNodoDestino, 0));
 		} else {
-			int n = index - listaEnlaces.size();
-			for (int i = 0; i < n; i++) {
-				listaEnlaces.add(null);
-			}
+//			int n = index - listaEnlaces.size();
+//			for (int i = 0; i < n; i++) {
+//				listaEnlaces.add(null);
+//			}
 			listaEnlaces.add(new Enlace(nombreNodoDestino, 0));
 		}
 	}

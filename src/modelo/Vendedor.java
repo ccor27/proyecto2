@@ -1,20 +1,24 @@
 package modelo;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Vendedor {
 	
 	private String nombre;
 	private String clave;
-	private HashMap<String, Integer> contactos;
+	//private HashMap<String, Integer> contactos;
 	private Arbol<Producto> listaProductos;
 	
 	public Vendedor(String nombre, String clave){
 		this.nombre=nombre;
 		this.clave = clave;
 		listaProductos = new Arbol<>();
-		contactos = new HashMap<>();
+		//contactos = new HashMap<>();
+	}
+	public Vendedor(){
+		
 	}
 
 	public String getNombre() {
@@ -25,16 +29,20 @@ public class Vendedor {
 		this.nombre = nombre;
 	}
 
-	public HashMap<String, Integer> getContactos() {
-		return contactos;
-	}
-
-	public void setContactos(HashMap<String, Integer> contactos) {
-		this.contactos = contactos;
-	}
+//	public HashMap<String, Integer> getContactos() {
+//		return contactos;
+//	}
+//
+//	public void setContactos(HashMap<String, Integer> contactos) {
+//		this.contactos = contactos;
+//	}
 
 	public Arbol<Producto> getListaProductos() {
 		return listaProductos;
+	}
+
+	public ArrayList<Producto> getListaProductosArray() {
+		return listaProductos.getLista();
 	}
 
 	public void setListaProductos(Arbol<Producto> listaProductos) {

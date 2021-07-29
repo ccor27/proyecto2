@@ -1,5 +1,6 @@
 package views;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -32,6 +33,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.swt.custom.TableTree;
+import org.eclipse.jface.viewers.TableTreeViewer;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.StyledText;
 
 public class RedSocial {
 
@@ -40,11 +48,12 @@ public class RedSocial {
 	private Text txtNombreProd;
 	private Text txtCategoria;
 	private Button button; 
-	private Button btnAgregar;
+	private Button btnAgregarVendedor;
 	
 	private int vendedores = 0;
 	private String vendedorSeleccionado = "";
 	private String vendedorConectar = "";
+	private ArrayList<Plantilla> listaVendedores = new ArrayList();
 	
 	private HashMap<String,NodoGrafo> lista;
 	private RedSocialController controller = new RedSocialController();
@@ -140,6 +149,7 @@ public class RedSocial {
 					if(!txtNombreProd.getText().equalsIgnoreCase("") && !txtCategoria.getText().equalsIgnoreCase("")){
 						Producto p = new Producto(txtNombreProd.getText(), txtCategoria.getText());
 			            if(controller.agregarProdVendedor(vendedorSeleccionado,p)){
+			            	llenarTablaProdVend(vendedorSeleccionado);
 			            	JOptionPane.showMessageDialog(null, "producto agregado con exito.");
 			            }else{
 			            	JOptionPane.showMessageDialog(null, "el producto ya existe o el vendedor no existe.");
@@ -178,6 +188,7 @@ public class RedSocial {
 						if(vendDestino !=null ||vendOrigen  !=null){
 							try {
 								controller.conectarVendedores(vendOrigen,vendDestino);
+								llenarTablaContcVend(vendedorSeleccionado);
 							} catch (ErrorNodoNoExiste e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -226,9 +237,9 @@ public class RedSocial {
 		
 		Button button = new Button(group, SWT.NONE);
 		
-		btnAgregar = new Button(group, SWT.NONE);
-		btnAgregar.setText("Agregar");
-		btnAgregar.setBounds(213, 43, 75, 25);
+		btnAgregarVendedor = new Button(group, SWT.NONE);
+		btnAgregarVendedor.setText("Agregar");
+		btnAgregarVendedor.setBounds(213, 43, 75, 25);
 		
 		Label lblClave = new Label(group, SWT.NONE);
 		lblClave.setBounds(10, 69, 55, 15);
@@ -236,33 +247,42 @@ public class RedSocial {
 		
 		txtClave = new Text(group, SWT.BORDER);
 		txtClave.setBounds(84, 69, 112, 21);
-		btnAgregar.addSelectionListener(new SelectionAdapter() {
+		btnAgregarVendedor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				if(!txtNombreNuevoVend.getText().equalsIgnoreCase("") && !txtClave.getText().equalsIgnoreCase("")){
-					
-					TabItem tab_vendedor = new TabItem(tabFolder, SWT.NONE);
-					tab_vendedor.setText(txtNombreNuevoVend.getText());
-					
-					Composite compositeVendedor = new Plantilla(tabFolder, SWT.NONE);
-					//Plantilla p = new Plantilla(compositeVendedor, SWT.NONE);
-					
-					tab_vendedor.setControl(compositeVendedor);
-					lista = controller.getGrafoNoDirigido();
-					
-					
-					try {
-						Vendedor vendedor = new Vendedor(txtNombreNuevoVend.getText(),txtClave.getText());
-						controller.crearVendedor(vendedor);
-					} catch (ErrorNodoYaExiste e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+
+				if(vendedores<10){
+					if(!txtNombreNuevoVend.getText().equalsIgnoreCase("") && !txtClave.getText().equalsIgnoreCase("")){
+						
+						try {
+							Vendedor vendedor = new Vendedor(txtNombreNuevoVend.getText(),txtClave.getText());
+							controller.crearVendedor(vendedor);
+							vendedores++;
+						} catch (ErrorNodoYaExiste e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						TabItem tab_vendedor = new TabItem(tabFolder, SWT.NONE);
+						tab_vendedor.setText(txtNombreNuevoVend.getText());
+						
+						Plantilla compositeVendedor = new Plantilla(tabFolder, SWT.NONE,txtNombreNuevoVend.getText());
+						//Plantilla p = new Plantilla(compositeVendedor, SWT.NONE);
+						listaVendedores.add(compositeVendedor);
+						
+						tab_vendedor.setControl(compositeVendedor);
+						lista = controller.getGrafoNoDirigido();
+						
+						
+
+						llenarCombos();
+						
+					}else{
+						JOptionPane.showMessageDialog(null, "debe ingresar un nombre y la clave");
 					}
-					llenarCombos();
-					
 				}else{
-					JOptionPane.showMessageDialog(null, "debe ingresar un nombre y la clave");
+					JOptionPane.showMessageDialog(null, "no se puede crear mas vendedores");
 				}
 				
 			}
@@ -281,9 +301,30 @@ public class RedSocial {
 			
 			String s = (String)it.next();
 			String s1 = (String)lista.get(s).getVendedor().getNombre();
+			System.out.println("s1: "+s1);
 			comboVend.add(s1);
 			comboVendConect.add(s1);
 		}
 	}
 	
+	public void llenarTablaProdVend(String nombre){
+
+		for (Plantilla plantilla : listaVendedores) {
+			if(plantilla.getNombreVend().equalsIgnoreCase(nombre)){
+				plantilla.llenarTablaProd();
+				break;
+			}
+		}
+
+	}
+	
+	public void llenarTablaContcVend(String nombre){
+		for (Plantilla plantilla : listaVendedores) {
+			if(plantilla.getNombreVend().equalsIgnoreCase(nombre)){
+				plantilla.llenarTablaCont();
+				break;
+			}
+		}
+	}
 }
+

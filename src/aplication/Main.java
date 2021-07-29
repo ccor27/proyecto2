@@ -24,7 +24,8 @@ public class Main {
 		grafoTareas.conectarNodoNoPesado(v1, v3);
 		grafoTareas.conectarNodoNoPesado(v1, v4);
 		grafoTareas.conectarNodoNoPesado(v1, v5);
-		System.out.println(grafoTareas.getlistaVendedores());
+		//System.out.println(grafoTareas.getlistaVendedores());
+	//	System.out.println(grafoTareas.getlistaVendedores().get(1).getVendedor().getContactos().toString());
 //		grafoTareas.agregarNodo("A", "1");
 //		grafoTareas.agregarNodo("B", "2");
 //		grafoTareas.agregarNodo("C", "3");

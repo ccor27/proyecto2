@@ -4,12 +4,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import ModelFactoryController.RedSocialController;
+import modelo.Enlace;
+import modelo.Producto;
+import modelo.Vendedor;
+
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,36 +32,50 @@ public class Plantilla extends Composite {
 	private Text txtAreaComentMeg;
 	private Text txtComentario;
 
+	private Vendedor vend = new Vendedor();
+	private ArrayList<Producto> listaProd = new ArrayList<>();
+	private ArrayList<Enlace> listaEnlaces = new ArrayList<>();
+	private RedSocialController controller = new RedSocialController();;
+	
+	private TableColumn tblclmnNombre;
+	private TableColumn tblclmnFechaYHora;
+	private TableColumn tblclmnPublicadoPor;
+	private TableViewer tableViewer;
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public Plantilla(Composite parent, int style) {
+	public Plantilla(Composite parent, int style, String nombreVend) {
 		super(parent, style);
+
+		//System.out.println("nombre del vendedor: "+nombreVend);
+		vend =controller.obtenerVendedor(nombreVend);
+		//System.out.println("vendedor(linea 51 plantilla): "+vend);
+		//llenarTablaProd();
 		
 		Group grpMuro = new Group(this, SWT.NONE);
 		grpMuro.setText("Muro");
 		grpMuro.setBounds(10, 195, 382, 265);
 		
-		TableViewer tableViewer = new TableViewer(grpMuro, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewer = new TableViewer(grpMuro, SWT.BORDER | SWT.FULL_SELECTION);
 		tblProductos = tableViewer.getTable();
 		tblProductos.setLinesVisible(true);
 		tblProductos.setHeaderVisible(true);
 		tblProductos.setBounds(10, 22, 362, 229);
 		
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-		TableColumn tblclmnNombre = tableViewerColumn.getColumn();
+		tblclmnNombre = tableViewerColumn.getColumn();
 		tblclmnNombre.setWidth(128);
 		tblclmnNombre.setText("Producto");
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
-		TableColumn tblclmnFechaYHora = tableViewerColumn_1.getColumn();
+		tblclmnFechaYHora = tableViewerColumn_1.getColumn();
 		tblclmnFechaYHora.setWidth(127);
 		tblclmnFechaYHora.setText("Fecha y hora");
 		
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tableViewer, SWT.NONE);
-		TableColumn tblclmnPublicadoPor = tableViewerColumn_2.getColumn();
+		tblclmnPublicadoPor = tableViewerColumn_2.getColumn();
 		tblclmnPublicadoPor.setWidth(103);
 		tblclmnPublicadoPor.setText("Publicado por");
 		
@@ -65,6 +90,13 @@ public class Plantilla extends Composite {
 		txtComentario.setBounds(10, 213, 101, 21);
 		
 		Button btnComentar = new Button(grpComentariosYMe, SWT.NONE);
+		btnComentar.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				//comentar
+			}
+		});
 		btnComentar.setBounds(129, 211, 75, 25);
 		btnComentar.setText("Comentar");
 		
@@ -108,7 +140,39 @@ public class Plantilla extends Composite {
 		lbl_IconoUsiario.setBounds(178, 23, 146, 133);
 
 	}
+	
+	public void llenarTablaProd(){
+		
+		listaProd = vend.getListaProductosArray();
+		if(listaProd!=null){
+			//System.out.println("entro a llenar tablaprod");
+			for (Producto producto : listaProd) {
+				//System.out.println("entro al for");
+				TableItem item = new TableItem(tblProductos,SWT.NONE);
+				item.setText(new String[] {producto.getNombre(),producto.getFechaHora(),vend.getNombre()});
+			}
+		}
+	}
+	public void llenarTablaCont(){
+	
+		listaEnlaces = controller.getListaEnlaces(vend.getNombre());
+		
 
+		if(listaEnlaces!=null){
+			for (Enlace enlace : listaEnlaces) {
+				TableItem item = new TableItem(tblContactos,SWT.NONE);
+				if(enlace.getNodo()!=null){
+					item.setText(new String[] {enlace.getNodo().getVendedor().getNombre()});	
+				}
+			}
+			}else{
+			System.out.println("lista enlaces vacia");
+		}
+	}
+
+	public String getNombreVend(){
+		return vend.getNombre();
+	}
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

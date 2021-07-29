@@ -1,11 +1,12 @@
 package modelo;
 
-
+import java.util.ArrayList;
 
 public class Arbol<T> {
 	
 	private NodoArbol<T> raiz;
 	private int peso;
+	private ArrayList<Producto> lista = new ArrayList();
 	
 	/**
 	 * Verifica si un árbol está vacío
@@ -48,10 +49,20 @@ public class Arbol<T> {
 	private void inorden(NodoArbol<T> n) {
 		if(n!=null) {
 			inorden(n.getIzquierdo());
-			System.out.print(n.getElemento()+"\t");
+			lista.add((Producto) n.getElemento());
+			//System.out.print(n.getElemento()+"\t");
 			inorden(n.getDerecho());
 		}
 	}
+	
+	public ArrayList<Producto> getLista() {
+		return lista;
+	}
+
+	public void setLista(ArrayList<Producto> lista) {
+		this.lista = lista;
+	}
+
 	/**
 	 * @return the raiz
 	 */

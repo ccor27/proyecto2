@@ -1,9 +1,11 @@
 package ModelFactoryController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import exception.ErrorNodoNoExiste;
 import exception.ErrorNodoYaExiste;
+import modelo.Enlace;
 import modelo.GrafoNoDirigido;
 import modelo.NodoGrafo;
 import modelo.Producto;
@@ -31,7 +33,7 @@ public class RedSocialController {
 		return controller.agregarProdVendedor(vendedorSeleccionado,p);
 	}
 
-	public Object obtenerVendedor(String nombreVendedor) {
+	public Vendedor obtenerVendedor(String nombreVendedor) {
 		
 		return controller.obtenerVendedor(nombreVendedor);
 	}
@@ -39,6 +41,12 @@ public class RedSocialController {
 	public void conectarVendedores(Vendedor vendOrigen, Vendedor vendDestino) throws ErrorNodoNoExiste {
 		
 		controller.conectarVendedores(vendOrigen,vendDestino);
+	}
+
+	public ArrayList<Enlace> getListaEnlaces(String nombre) {
+		
+		return controller.getListaEnlaces(nombre);
+				
 	}
 
 
