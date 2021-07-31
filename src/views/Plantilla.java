@@ -32,7 +32,10 @@ public class Plantilla extends Composite {
 	private Text txtAreaComentMeg;
 	private Text txtComentario;
 
+	private RedSocial red;
 	private Vendedor vend = new Vendedor();
+	private Vendedor vendedorSeleccionadoTabla = new Vendedor();
+	private String comentarios="";
 	private ArrayList<Producto> listaProd = new ArrayList<>();
 	private ArrayList<Enlace> listaEnlaces = new ArrayList<>();
 	private RedSocialController controller = new RedSocialController();;
@@ -51,6 +54,7 @@ public class Plantilla extends Composite {
 
 		//System.out.println("nombre del vendedor: "+nombreVend);
 		vend =controller.obtenerVendedor(nombreVend);
+		
 		//System.out.println("vendedor(linea 51 plantilla): "+vend);
 		//llenarTablaProd();
 		
@@ -60,6 +64,28 @@ public class Plantilla extends Composite {
 		
 		tableViewer = new TableViewer(grpMuro, SWT.BORDER | SWT.FULL_SELECTION);
 		tblProductos = tableViewer.getTable();
+		tblProductos.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			
+			String nombre =  tblProductos.getItem(tblProductos.getSelectionIndex()).getText();
+			
+			if(listaEnlaces.size()!=0){
+				for (Enlace enlace : listaEnlaces) {
+					ArrayList<Producto> list = enlace.getNodo().getVendedor().getListaProductosArray();
+					for (Producto producto : list) {
+						if(producto.getNombre().equalsIgnoreCase(nombre))
+							vendedorSeleccionadoTabla=enlace.getNodo().getVendedor();
+					}
+				}
+			}else{
+				vendedorSeleccionadoTabla = vend;
+			}
+//			System.out.println(nombre);
+//			vendedorSeleccionadoTabla = controller.obtenerVendedor(nombre);
+
+			}
+		});
 		tblProductos.setLinesVisible(true);
 		tblProductos.setHeaderVisible(true);
 		tblProductos.setBounds(10, 22, 362, 229);
@@ -84,6 +110,8 @@ public class Plantilla extends Composite {
 		grpComentariosYMe.setBounds(398, 195, 302, 265);
 		
 		txtAreaComentMeg = new Text(grpComentariosYMe, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
+		txtAreaComentMeg.setEnabled(false);
+		txtAreaComentMeg.setEditable(false);
 		txtAreaComentMeg.setBounds(10, 32, 282, 157);
 		
 		txtComentario = new Text(grpComentariosYMe, SWT.BORDER);
@@ -93,6 +121,20 @@ public class Plantilla extends Composite {
 		btnComentar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				
+				
+				if(vendedorSeleccionadoTabla!=null && !txtComentario.getText().equalsIgnoreCase("")){
+					comentarios+=" "+vend.getNombre()+" comento el producto de: "+vendedorSeleccionadoTabla.getNombre()+"\n"+txtComentario.getText()+"\n";
+					txtAreaComentMeg.setText(comentarios);
+					
+					ArrayList<String> listEnlace = new ArrayList<>();
+					for (Enlace enlace : listaEnlaces) {
+						listEnlace.add(enlace.getNodo().getVendedor().getNombre());
+					}
+					red.comentarEnEnlazados(listEnlace, " "+vend.getNombre()+" comento el producto de: "+vendedorSeleccionadoTabla.getNombre()+"\n"+txtComentario.getText()+"\n");
+				}else{
+					System.out.println("no comenta");
+				}
 				
 				//comentar
 			}
@@ -133,7 +175,10 @@ public class Plantilla extends Composite {
 		lblNombreDelVendedor.setText("Nombre ");
 		
 		txtNombreVendedor = new Text(grpVendedor, SWT.BORDER);
+		txtNombreVendedor.setEnabled(false);
+		txtNombreVendedor.setEditable(false);
 		txtNombreVendedor.setBounds(10, 70, 88, 21);
+		txtNombreVendedor.setText(nombreVend);
 		
 		Label lbl_IconoUsiario = new Label(grpVendedor, SWT.NONE);
 		lbl_IconoUsiario.setImage(SWTResourceManager.getImage("C:\\estructuraDatos\\proyecto2\\resources\\iconoUsuario2.png"));
@@ -143,15 +188,44 @@ public class Plantilla extends Composite {
 	
 	public void llenarTablaProd(){
 		
-		listaProd = vend.getListaProductosArray();
-		if(listaProd!=null){
-			//System.out.println("entro a llenar tablaprod");
-			for (Producto producto : listaProd) {
-				//System.out.println("entro al for");
-				TableItem item = new TableItem(tblProductos,SWT.NONE);
-				item.setText(new String[] {producto.getNombre(),producto.getFechaHora(),vend.getNombre()});
+		listaEnlaces = controller.getListaEnlaces(vend.getNombre());
+		
+		if(listaEnlaces.size()==0){//si no hay enlaces, muestra solo los productos del vendedor
+			listaProd = vend.getListaProductosArray();
+			if(listaProd!=null){
+				//System.out.println("entro a llenar tablaprod");
+				for (Producto producto : listaProd) {
+					//System.out.println("entro al for");
+					TableItem item = new TableItem(tblProductos,SWT.NONE);
+					item.setText(new String[] {producto.getNombre(),producto.getFechaHora(),vend.getNombre()});
+				}
+			}
+		}else{//si hay nodos enlazados, muestra los productos de todos
+			for (Enlace enlace : listaEnlaces) {
+				
+				listaProd = enlace.getNodo().getVendedor().getListaProductosArray();
+				if(listaProd!=null){
+					//System.out.println("entro a llenar tablaprod");
+					for (Producto producto : listaProd) {
+						//System.out.println("entro al for");
+						TableItem item = new TableItem(tblProductos,SWT.NONE);
+						item.setText(new String[] {producto.getNombre(),producto.getFechaHora(),vend.getNombre()});
+					}
+				}
 			}
 		}
+		
+
+		
+//		listaProd = vend.getListaProductosArray();
+//		if(listaProd!=null){
+//			//System.out.println("entro a llenar tablaprod");
+//			for (Producto producto : listaProd) {
+//				//System.out.println("entro al for");
+//				TableItem item = new TableItem(tblProductos,SWT.NONE);
+//				item.setText(new String[] {producto.getNombre(),producto.getFechaHora(),vend.getNombre()});
+//			}
+//		}
 	}
 	public void llenarTablaCont(){
 	
@@ -169,7 +243,14 @@ public class Plantilla extends Composite {
 			System.out.println("lista enlaces vacia");
 		}
 	}
+	
+	public void comentarProduct(String mensaje){
+		txtAreaComentMeg.setText(mensaje);
+	}
 
+	public void setRed(RedSocial red){
+		this.red =red;
+	}
 	public String getNombreVend(){
 		return vend.getNombre();
 	}

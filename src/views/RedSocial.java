@@ -60,7 +60,8 @@ public class RedSocial {
 	private Combo comboVend;
 	private Text txtClave;
 	private Combo comboVendConect;
-
+    private RedSocial red = this;
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -189,6 +190,9 @@ public class RedSocial {
 							try {
 								controller.conectarVendedores(vendOrigen,vendDestino);
 								llenarTablaContcVend(vendedorSeleccionado);
+								llenarTablaContcVend(vendedorConectar);
+								llenarTablaProdVend(vendedorSeleccionado);
+								llenarTablaProdVend(vendedorConectar);
 							} catch (ErrorNodoNoExiste e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -268,6 +272,7 @@ public class RedSocial {
 						tab_vendedor.setText(txtNombreNuevoVend.getText());
 						
 						Plantilla compositeVendedor = new Plantilla(tabFolder, SWT.NONE,txtNombreNuevoVend.getText());
+						compositeVendedor.setRed(red);
 						//Plantilla p = new Plantilla(compositeVendedor, SWT.NONE);
 						listaVendedores.add(compositeVendedor);
 						
@@ -323,6 +328,19 @@ public class RedSocial {
 			if(plantilla.getNombreVend().equalsIgnoreCase(nombre)){
 				plantilla.llenarTablaCont();
 				break;
+			}
+		}
+	}
+	
+	public void comentarEnEnlazados(ArrayList<String> enlaces, String mensaje){
+		
+
+		for (String string : enlaces) {
+			
+			for (Plantilla plantilla : listaVendedores) {
+				if(plantilla.getNombreVend().equalsIgnoreCase(string)){
+					plantilla.comentarProduct(mensaje);
+				}
 			}
 		}
 	}

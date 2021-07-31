@@ -48,14 +48,20 @@ public class NodoGrafo {
 	public int buscarIndiceLibre() {
 		int indiceDisponible = -1;
 		Enlace enlaceAuxiliar = null;
-		for (int i = 0; i < listaEnlaces.size(); i++) {
-			enlaceAuxiliar = listaEnlaces.get(i);
-			if (enlaceAuxiliar == null) {
-				indiceDisponible = i;
-				i = listaEnlaces.size();
+		if(listaEnlaces.size()==0){
+			indiceDisponible=0;
+		}else{
+			for (int i = 0; i < listaEnlaces.size(); i++) {
+				enlaceAuxiliar = listaEnlaces.get(i);
+				if (enlaceAuxiliar == null) {
+					indiceDisponible = i;
+					i = listaEnlaces.size();
+				}
 			}
+			listaEnlaces.add(null);
 		}
-		listaEnlaces.add(null);
+		
+
 		return indiceDisponible;
 	}
 	/**
@@ -95,10 +101,10 @@ public class NodoGrafo {
 
 			listaEnlaces.set(index, new Enlace(nombreNodoDestino, 0));
 		} else {
-//			int n = index - listaEnlaces.size();
-//			for (int i = 0; i < n; i++) {
-//				listaEnlaces.add(null);
-//			}
+			int n = index - listaEnlaces.size();
+			for (int i = 0; i < n; i++) {
+				listaEnlaces.add(null);
+			}
 			listaEnlaces.add(new Enlace(nombreNodoDestino, 0));
 		}
 	}
