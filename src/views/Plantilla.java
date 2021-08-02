@@ -189,18 +189,23 @@ public class Plantilla extends Composite {
 	public void llenarTablaProd(){
 		
 		listaEnlaces = controller.getListaEnlaces(vend.getNombre());
-		
+		listaProd.clear();
+		tblProductos.clearAll();
 		if(listaEnlaces.size()==0){//si no hay enlaces, muestra solo los productos del vendedor
+			
 			listaProd = vend.getListaProductosArray();
 			if(listaProd!=null){
-				//System.out.println("entro a llenar tablaprod");
+				System.out.println("entro a llenar tablaprod "+listaProd);
 				for (Producto producto : listaProd) {
-					//System.out.println("entro al for");
+					System.out.println("entro al for");
 					TableItem item = new TableItem(tblProductos,SWT.NONE);
 					item.setText(new String[] {producto.getNombre(),producto.getFechaHora(),vend.getNombre()});
 				}
+			}else{
+				System.out.println("lista vacia");	
 			}
 		}else{//si hay nodos enlazados, muestra los productos de todos
+			System.out.println("lista con enlaces");
 			for (Enlace enlace : listaEnlaces) {
 				
 				listaProd = enlace.getNodo().getVendedor().getListaProductosArray();
@@ -230,7 +235,7 @@ public class Plantilla extends Composite {
 	public void llenarTablaCont(){
 	
 		listaEnlaces = controller.getListaEnlaces(vend.getNombre());
-		
+		tblContactos.removeAll();
 
 		if(listaEnlaces!=null){
 			for (Enlace enlace : listaEnlaces) {

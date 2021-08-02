@@ -69,6 +69,7 @@ public class GrafoNoDirigido {
 			String s = (String)it.next();
 			String s1 = (String)listaVendedores.get(s).getVendedor().getNombre();
 			if(s1.equalsIgnoreCase(nombreVendedor)){
+				System.out.println("entro agregarprodvendedro linea 72 grafonodirigido");
 				vend=listaVendedores.get(s).getVendedor();
 				break;
 			}
@@ -78,7 +79,7 @@ public class GrafoNoDirigido {
 		if(vend!=null){//verificamos que el vendedor exista
 			if(vend.agregarProducto(p)){
 				centinela = true;
-				vend.getListaProductos().inorden();
+				//vend.getListaProductos().inorden();
 			}
 					
 		}

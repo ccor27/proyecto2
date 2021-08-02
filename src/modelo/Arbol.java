@@ -56,6 +56,7 @@ public class Arbol<T> {
 	}
 	
 	public ArrayList<Producto> getLista() {
+		inorden();//para llenar la alista de productos
 		return lista;
 	}
 

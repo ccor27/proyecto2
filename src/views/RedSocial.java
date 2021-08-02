@@ -22,6 +22,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import ModelFactoryController.RedSocialController;
 import exception.ErrorNodoNoExiste;
 import exception.ErrorNodoYaExiste;
+import modelo.Enlace;
 import modelo.NodoGrafo;
 import modelo.Producto;
 import modelo.Vendedor;
@@ -191,6 +192,7 @@ public class RedSocial {
 								controller.conectarVendedores(vendOrigen,vendDestino);
 								llenarTablaContcVend(vendedorSeleccionado);
 								llenarTablaContcVend(vendedorConectar);
+								
 								llenarTablaProdVend(vendedorSeleccionado);
 								llenarTablaProdVend(vendedorConectar);
 							} catch (ErrorNodoNoExiste e1) {
@@ -314,6 +316,11 @@ public class RedSocial {
 	
 	public void llenarTablaProdVend(String nombre){
 
+//		ArrayList<Enlace> enlaces = controller.getListaEnlaces(nombre);
+//		for (Enlace enlace : enlaces) {
+//			
+//			
+//		}
 		for (Plantilla plantilla : listaVendedores) {
 			if(plantilla.getNombreVend().equalsIgnoreCase(nombre)){
 				plantilla.llenarTablaProd();
